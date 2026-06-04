@@ -499,8 +499,148 @@
     white-space: nowrap;
   }
 
-  /* Page navigation */
-  .page-nav {
+  /* Copy-paste panel modal */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .modal-overlay.show { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 820px; max-width: 96vw;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,110,247,0.15);
+    transform: translateY(16px);
+    transition: transform 0.25s;
+  }
+  .modal-overlay.show .modal { transform: translateY(0); }
+  .modal-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-header h2 { font-size: 16px; font-weight: 700; }
+  .modal-close {
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); width: 30px; height: 30px;
+    border-radius: 8px; cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { border-color: var(--danger); color: var(--danger); }
+  .modal-body {
+    padding: 20px 24px;
+    overflow-y: auto; flex: 1;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  .modal-col h3 {
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 12px;
+  }
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 10px; justify-content: flex-end;
+    align-items: center;
+  }
+
+  /* Clipboard preview */
+  .clipboard-preview {
+    background: var(--surface2);
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    min-height: 160px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .clipboard-preview img {
+    max-width: 100%; max-height: 260px;
+    border-radius: 6px; display: block;
+  }
+  .clipboard-preview .empty-clip {
+    color: var(--muted); font-size: 12px; text-align: center; padding: 20px;
+  }
+  .clip-badge {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--accent); color: white;
+    font-size: 10px; font-weight: 700; padding: 3px 8px;
+    border-radius: 20px; letter-spacing: 1px;
+  }
+
+  /* Target page selector */
+  .page-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 8px; max-height: 280px; overflow-y: auto;
+    padding: 4px;
+  }
+  .page-grid::-webkit-scrollbar { width: 4px; }
+  .page-grid::-webkit-scrollbar-thumb { background: var(--border); }
+  .target-thumb {
+    border-radius: 8px; overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer; transition: all 0.2s;
+    background: var(--surface2);
+    position: relative;
+  }
+  .target-thumb:hover { border-color: var(--accent); }
+  .target-thumb.selected { border-color: var(--accent); box-shadow: 0 0 12px rgba(124,110,247,0.4); }
+  .target-thumb canvas { width: 100%; height: auto; display: block; }
+  .target-thumb-label {
+    font-size: 10px; text-align: center; padding: 4px;
+    color: var(--muted); font-family: 'Consolas', monospace;
+  }
+
+  /* Paste position controls */
+  .pos-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;
+  }
+  .pos-field label { font-size: 11px; color: var(--muted); margin-bottom: 4px; display: block; }
+  .pos-field input[type=number] {
+    width: 100%;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); padding: 7px 10px; border-radius: 8px;
+    font-family: 'Consolas', monospace; font-size: 12px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .pos-field input:focus { border-color: var(--accent); }
+
+  /* Copy selection box — fixed to viewport so scroll doesn't affect it */
+  .copy-sel-box {
+    border: 2px solid var(--accent2);
+    background: rgba(232,93,138,0.10);
+    box-shadow: 0 0 0 1px rgba(232,93,138,0.4);
+    border-radius: 2px;
+  }
+  .copy-sel-box::after {
+    content: 'Area Copy';
+    position: absolute; top: -22px; left: 0;
+    background: var(--accent2); color: white;
+    font-size: 10px; font-weight: 700; padding: 2px 8px;
+    border-radius: 4px; white-space: nowrap;
+    font-family: 'Consolas', monospace;
+  }
+
+  /* Second PDF upload area */
+  .pdf2-drop {
+    border: 2px dashed var(--border);
+    border-radius: 10px; padding: 14px;
+    text-align: center; cursor: pointer;
+    transition: all 0.2s; background: rgba(124,110,247,0.03);
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .pdf2-drop:hover { border-color: var(--accent); background: rgba(124,110,247,0.07); }
+  .pdf2-drop strong { color: var(--accent); }
+
     display: flex; align-items: center; gap: 6px;
   }
   .nav-btn {
@@ -571,6 +711,9 @@
           </button>
           <button class="tool-btn" id="toolDraw" onclick="setTool('draw')" title="Gambar">
             ✏️ Gambar
+          </button>
+          <button class="tool-btn" id="toolCopy" onclick="setTool('copy')" title="Copy Area ke PDF Lain">
+            📋 Copy Area
           </button>
           <button class="tool-btn" id="toolHighlight" onclick="setTool('highlight')" title="Sorot">
             🖊 Sorot
@@ -715,6 +858,108 @@
   </main>
 </div>
 
+<!-- Copy-Paste Modal -->
+<div class="modal-overlay" id="copyModal">
+  <div class="modal" style="width:900px;max-width:98vw;">
+    <div class="modal-header">
+      <div>
+        <h2>📋 Tempel Gambar ke PDF</h2>
+        <p style="font-size:11px;color:var(--muted);margin-top:3px;">Seret gambar ke posisi yang diinginkan di halaman tujuan</p>
+      </div>
+      <button class="modal-close" onclick="closeCopyModal()">×</button>
+    </div>
+
+    <!-- STEP INDICATOR -->
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);">
+      <div class="paste-step active" id="step1Ind" style="flex:1;padding:12px 20px;font-size:12px;font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);cursor:default;">
+        ① Upload PDF Tujuan
+      </div>
+      <div class="paste-step" id="step2Ind" style="flex:1;padding:12px 20px;font-size:12px;font-weight:700;color:var(--muted);border-bottom:2px solid transparent;cursor:default;">
+        ② Pilih Halaman
+      </div>
+      <div class="paste-step" id="step3Ind" style="flex:1;padding:12px 20px;font-size:12px;font-weight:700;color:var(--muted);border-bottom:2px solid transparent;cursor:default;">
+        ③ Seret & Posisikan
+      </div>
+    </div>
+
+    <!-- STEP 1: Upload PDF tujuan -->
+    <div id="pasteStep1" style="padding:32px 24px;display:flex;flex-direction:column;align-items:center;gap:16px;">
+      <div style="font-size:48px;">📄</div>
+      <div style="text-align:center;">
+        <div style="font-size:16px;font-weight:700;margin-bottom:6px;">Upload PDF Tujuan</div>
+        <div style="font-size:13px;color:var(--muted);">File PDF tempat gambar akan ditempel</div>
+      </div>
+      <div class="pdf2-drop" id="pdf2Drop" onclick="document.getElementById('pdf2Input').click()"
+           style="width:100%;max-width:400px;padding:24px;">
+        <div style="font-size:28px;margin-bottom:8px;">⬆️</div>
+        <strong>Klik atau drag file PDF ke sini</strong>
+      </div>
+      <input type="file" id="pdf2Input" accept=".pdf" style="display:none">
+
+      <!-- Preview gambar yang akan ditempel -->
+      <div style="margin-top:8px;text-align:center;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;font-weight:700;">Gambar yang akan ditempel</div>
+        <div id="clipThumbSmall" style="display:inline-block;border:2px solid var(--border);border-radius:8px;overflow:hidden;max-width:200px;max-height:120px;background:var(--surface2);">
+          <div style="padding:16px;color:var(--muted);font-size:12px;">Belum ada</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Pilih halaman -->
+    <div id="pasteStep2" style="display:none;padding:20px 24px;">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:14px;">Klik halaman yang ingin dijadikan tujuan tempel:</div>
+      <div class="page-grid" id="targetPageGrid" style="max-height:380px;">
+        <div style="color:var(--muted);font-size:12px;grid-column:1/-1;text-align:center;padding:20px;">
+          Upload PDF tujuan dulu
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Visual paste canvas -->
+    <div id="pasteStep3" style="display:none;flex-direction:column;">
+      <div style="padding:10px 20px;background:rgba(124,110,247,0.06);border-bottom:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;">
+        <span style="font-size:16px;">👆</span>
+        <span>Seret gambar ke posisi yang diinginkan. Gunakan handle pojok untuk mengubah ukuran.</span>
+        <button onclick="resetPastePosition()" style="margin-left:auto;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;">Reset Posisi</button>
+      </div>
+      <div style="flex:1;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:20px;background:var(--bg);">
+        <div style="position:relative;display:inline-block;" id="pasteCanvasWrapper">
+          <canvas id="pastePageCanvas" style="display:block;border-radius:4px;box-shadow:0 8px 32px rgba(0,0,0,0.4);"></canvas>
+          <!-- Draggable paste image overlay -->
+          <div id="pasteImageOverlay" style="
+            position:absolute;top:60px;left:60px;
+            width:200px;height:150px;
+            cursor:move;
+            border:2px solid var(--accent2);
+            box-shadow:0 0 0 1px rgba(232,93,138,0.5),0 4px 16px rgba(0,0,0,0.3);
+            user-select:none;
+            border-radius:2px;
+          ">
+            <img id="pasteImageEl" src="" style="width:100%;height:100%;display:block;pointer-events:none;border-radius:1px;">
+            <!-- Resize handles -->
+            <div class="resize-handle" data-dir="se" style="position:absolute;bottom:-6px;right:-6px;width:12px;height:12px;background:var(--accent2);border-radius:3px;cursor:se-resize;"></div>
+            <div class="resize-handle" data-dir="sw" style="position:absolute;bottom:-6px;left:-6px;width:12px;height:12px;background:var(--accent2);border-radius:3px;cursor:sw-resize;"></div>
+            <div class="resize-handle" data-dir="ne" style="position:absolute;top:-6px;right:-6px;width:12px;height:12px;background:var(--accent2);border-radius:3px;cursor:ne-resize;"></div>
+            <div class="resize-handle" data-dir="nw" style="position:absolute;top:-6px;left:-6px;width:12px;height:12px;background:var(--accent2);border-radius:3px;cursor:nw-resize;"></div>
+            <!-- Label -->
+            <div style="position:absolute;top:-22px;left:0;background:var(--accent2);color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;font-family:'Consolas',monospace;" id="overlayLabel">Geser untuk memposisikan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="tool-btn" id="backBtn" onclick="pasteGoBack()" style="display:none;">← Kembali</button>
+      <span id="pasteStatus" style="font-size:12px;color:var(--muted);flex:1;"></span>
+      <button class="tool-btn" onclick="closeCopyModal()">Batal</button>
+      <button class="tool-btn success" onclick="executePaste()" id="pasteBtn" disabled>
+        ✅ Tempel & Download PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -742,6 +987,16 @@ let drawCtx = null;
 let selectedPages = new Set();
 let originalBytes = null;
 let fileName = 'document.pdf';
+
+// Copy-paste state
+let clipboardImageDataURL = null;
+let pdf2Doc = null;
+let pdf2JsDoc = null;
+let pdf2FileName = 'target.pdf';
+let targetPageNum = 1;
+let copySelStart = null;      // canvas-internal coords (for crop)
+let copySelStartScreen = null; // screen coords (for visual box)
+let copySelBox = null;
 
 // ── File Input ──────────────────────────────────────────────────────────────
 document.getElementById('fileInput').addEventListener('change', e => {
@@ -889,6 +1144,11 @@ function setupDrawEvents(canvas, viewport) {
     } else if (currentTool === 'whiteout') {
       isDrawing = true;
       woStart = { x, y };
+    } else if (currentTool === 'copy') {
+      isDrawing = true;
+      copySelStart = { x, y };
+      copySelStartScreen = { x: e.clientX, y: e.clientY };
+      removeCopySelBox();
     } else if (currentTool === 'text') {
       const text = document.getElementById('textInput').value || 'Teks';
       const size = parseInt(document.getElementById('fontSize').value);
@@ -920,6 +1180,8 @@ function setupDrawEvents(canvas, viewport) {
       redrawAnnotations();
       drawCtx.fillStyle = 'rgba(252, 200, 50, 0.35)';
       drawCtx.fillRect(hlStart.x, hlStart.y, x - hlStart.x, y - hlStart.y);
+    } else if (currentTool === 'copy' && copySelStart) {
+      showCopySelBox(copySelStartScreen, { x: e.clientX, y: e.clientY });
     } else if (currentTool === 'whiteout' && woStart) {
       // Live preview whiteout box
       redrawAnnotations();
@@ -934,11 +1196,18 @@ function setupDrawEvents(canvas, viewport) {
     }
   });
 
-  canvas.addEventListener('mouseup', e => {
+  canvas.addEventListener('mouseup', async e => {
     if (!isDrawing) return;
     isDrawing = false;
     const { x, y } = getCanvasPos(e, canvas);
-    if (currentTool === 'draw') {
+    if (currentTool === 'copy' && copySelStart) {
+      const w = x - copySelStart.x;
+      const h = y - copySelStart.y;
+      if (Math.abs(w) > 5 && Math.abs(h) > 5) {
+        await captureArea(canvas, copySelStart, { x, y });
+      }
+      copySelStart = null;
+    } else if (currentTool === 'draw') {
       if (!annotations[currentPage]) annotations[currentPage] = [];
       annotations[currentPage].push({
         type: 'draw',
@@ -975,9 +1244,10 @@ function setupDrawEvents(canvas, viewport) {
 
   // Touch support
   canvas.addEventListener('mouseleave', () => {
-    if (isDrawing && currentTool === 'whiteout') {
+    if (isDrawing && (currentTool === 'whiteout' || currentTool === 'copy')) {
       isDrawing = false;
       woStart = null;
+      copySelStart = null;
       redrawAnnotations();
     }
   });
@@ -1046,14 +1316,16 @@ function changeZoom(delta) {
 // ── Tools ────────────────────────────────────────────────────────────────────
 function setTool(tool) {
   currentTool = tool;
-  ['select', 'whiteout', 'text', 'draw', 'highlight'].forEach(t => {
+  ['select', 'whiteout', 'text', 'draw', 'highlight', 'copy'].forEach(t => {
     document.getElementById('tool' + capitalize(t))?.classList.toggle('active', t === tool);
   });
   if (drawCanvas) {
     if (tool === 'select') drawCanvas.style.cursor = 'default';
     else if (tool === 'whiteout') drawCanvas.style.cursor = 'cell';
+    else if (tool === 'copy') drawCanvas.style.cursor = 'copy';
     else drawCanvas.style.cursor = 'crosshair';
   }
+  if (tool !== 'copy') removeCopySelBox();
 }
 
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
@@ -1265,6 +1537,355 @@ function toast(msg, type = '') {
   toastTimeout = setTimeout(() => el.classList.remove('show'), 3000);
 }
 
+// ── Copy-Paste Functions ──────────────────────────────────────────────────────
+
+let pasteCurrentStep = 1;
+let pasteOverlayDragging = false;
+let pasteOverlayResizing = false;
+let pasteResizeDir = '';
+let pasteDragStartX = 0, pasteDragStartY = 0;
+let pasteOvStartX = 0, pasteOvStartY = 0;
+let pasteOvStartW = 0, pasteOvStartH = 0;
+let pasteCanvasScale = 1; // px-per-pt ratio for the preview canvas
+
+function showCopySelBox(screenStart, screenCurrent) {
+  removeCopySelBox();
+  const x1 = Math.min(screenStart.x, screenCurrent.x);
+  const y1 = Math.min(screenStart.y, screenCurrent.y);
+  const w  = Math.abs(screenCurrent.x - screenStart.x);
+  const h  = Math.abs(screenCurrent.y - screenStart.y);
+
+  copySelBox = document.createElement('div');
+  copySelBox.className = 'copy-sel-box';
+  // Fixed to viewport using position:fixed
+  copySelBox.style.cssText = `
+    position:fixed;
+    left:${x1}px; top:${y1}px;
+    width:${w}px; height:${h}px;
+    pointer-events:none; z-index:9999;
+  `;
+  document.body.appendChild(copySelBox);
+}
+
+function removeCopySelBox() {
+  if (copySelBox) { copySelBox.remove(); copySelBox = null; }
+}
+
+async function captureArea(drawCanvasEl, start, end) {
+  if (!pdfJsDoc) return;
+  toast('⏳ Mengambil area...');
+
+  // The drawCanvas is rendered at (zoom * 1.5) scale.
+  // start/end are in drawCanvas pixel coordinates.
+  // We re-render at HI_SCALE for sharpness, then map coordinates.
+  const HI_SCALE = 4;
+  const displayScale = zoom * 1.5;
+  const ratio = HI_SCALE / displayScale;
+
+  const page = await pdfJsDoc.getPage(currentPage);
+  const rotation = pageRotations[currentPage] || 0;
+  const hiVp = page.getViewport({ scale: HI_SCALE, rotation });
+
+  const hiCanvas = document.createElement('canvas');
+  hiCanvas.width  = hiVp.width;
+  hiCanvas.height = hiVp.height;
+  await page.render({ canvasContext: hiCanvas.getContext('2d'), viewport: hiVp }).promise;
+
+  // Map selection from drawCanvas coords → hiCanvas coords
+  const x1 = Math.round(Math.min(start.x, end.x) * ratio);
+  const y1 = Math.round(Math.min(start.y, end.y) * ratio);
+  const w  = Math.round(Math.abs(end.x - start.x) * ratio);
+  const h  = Math.round(Math.abs(end.y - start.y) * ratio);
+
+  if (w < 2 || h < 2) { toast('Area terlalu kecil', 'error'); return; }
+
+  // Crop from hi-res
+  const crop = document.createElement('canvas');
+  crop.width  = w;
+  crop.height = h;
+  crop.getContext('2d').drawImage(hiCanvas, x1, y1, w, h, 0, 0, w, h);
+
+  clipboardImageDataURL = crop.toDataURL('image/png');
+
+  // Show thumbnail
+  const thumb = document.getElementById('clipThumbSmall');
+  thumb.innerHTML = '';
+  const img = document.createElement('img');
+  img.src = clipboardImageDataURL;
+  img.style.cssText = 'max-width:200px;max-height:120px;display:block;border-radius:4px;';
+  thumb.appendChild(img);
+
+  openCopyModal();
+  toast('Area berhasil dicopy!', 'success');
+}
+
+function openCopyModal() {
+  document.getElementById('copyModal').classList.add('show');
+  goToStep(1);
+}
+
+function closeCopyModal() {
+  document.getElementById('copyModal').classList.remove('show');
+  removeCopySelBox();
+}
+
+function goToStep(n) {
+  pasteCurrentStep = n;
+  document.getElementById('pasteStep1').style.display = n === 1 ? 'flex' : 'none';
+  document.getElementById('pasteStep2').style.display = n === 2 ? 'block' : 'none';
+  document.getElementById('pasteStep3').style.display = n === 3 ? 'flex' : 'none';
+  document.getElementById('backBtn').style.display = n > 1 ? '' : 'none';
+  document.getElementById('pasteBtn').disabled = n < 3;
+
+  // Step indicators
+  [1,2,3].forEach(i => {
+    const el = document.getElementById(`step${i}Ind`);
+    const active = i === n;
+    const done   = i < n;
+    el.style.color = active ? 'var(--accent)' : (done ? 'var(--accent3)' : 'var(--muted)');
+    el.style.borderBottomColor = active ? 'var(--accent)' : 'transparent';
+  });
+
+  if (n === 3) renderPasteCanvas();
+}
+
+function pasteGoBack() {
+  if (pasteCurrentStep > 1) goToStep(pasteCurrentStep - 1);
+}
+
+// PDF2 upload
+document.getElementById('pdf2Input').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  pdf2FileName = file.name;
+  toast('⏳ Memuat PDF tujuan...');
+  const buf = await file.arrayBuffer();
+  const bytes = new Uint8Array(buf);
+  pdf2Doc   = await PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
+  pdf2JsDoc = await pdfjsLib.getDocument({ data: bytes }).promise;
+  // Update drop zone label
+  document.getElementById('pdf2Drop').innerHTML = `<div style="font-size:20px;margin-bottom:6px;">✅</div><strong style="color:var(--accent3)">${file.name}</strong><br><span style="font-size:11px;">Klik untuk ganti</span>`;
+  toast('PDF tujuan dimuat', 'success');
+  await renderTargetPageGrid();
+  goToStep(2);
+});
+
+const pdf2Drop = document.getElementById('pdf2Drop');
+pdf2Drop.addEventListener('dragover', e => { e.preventDefault(); pdf2Drop.style.borderColor='var(--accent)'; });
+pdf2Drop.addEventListener('dragleave', () => { pdf2Drop.style.borderColor=''; });
+pdf2Drop.addEventListener('drop', async e => {
+  e.preventDefault(); pdf2Drop.style.borderColor='';
+  const file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') {
+    const dt = new DataTransfer(); dt.items.add(file);
+    document.getElementById('pdf2Input').files = dt.files;
+    document.getElementById('pdf2Input').dispatchEvent(new Event('change'));
+  }
+});
+
+async function renderTargetPageGrid() {
+  const grid = document.getElementById('targetPageGrid');
+  grid.innerHTML = '';
+  const total = pdf2JsDoc.numPages;
+  for (let i = 1; i <= total; i++) {
+    const page = await pdf2JsDoc.getPage(i);
+    const vp = page.getViewport({ scale: 0.25 });
+    const div = document.createElement('div');
+    div.className = 'target-thumb' + (i === targetPageNum ? ' selected' : '');
+    const cv = document.createElement('canvas');
+    cv.width = vp.width; cv.height = vp.height;
+    await page.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise;
+    const lbl = document.createElement('div');
+    lbl.className = 'target-thumb-label';
+    lbl.textContent = 'Hal. ' + i;
+    div.appendChild(cv); div.appendChild(lbl);
+    div.onclick = () => {
+      targetPageNum = i;
+      grid.querySelectorAll('.target-thumb').forEach(t => t.classList.remove('selected'));
+      div.classList.add('selected');
+      goToStep(3);
+    };
+    grid.appendChild(div);
+  }
+}
+
+async function renderPasteCanvas() {
+  const page = await pdf2JsDoc.getPage(targetPageNum);
+  // Scale to fit modal (max ~640px wide)
+  const maxW = Math.min(640, window.innerWidth * 0.55);
+  const rawVp = page.getViewport({ scale: 1 });
+  const scale = maxW / rawVp.width;
+  const vp = page.getViewport({ scale });
+  pasteCanvasScale = scale;
+
+  const cv = document.getElementById('pastePageCanvas');
+  cv.width  = vp.width;
+  cv.height = vp.height;
+  await page.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise;
+
+  // Reset overlay to center with proportional default size
+  const ov = document.getElementById('pasteImageOverlay');
+  const img = document.getElementById('pasteImageEl');
+  img.src = clipboardImageDataURL;
+
+  const defaultW = Math.min(vp.width * 0.4, 260);
+  const defaultH = defaultW * 0.65;
+  ov.style.width  = defaultW + 'px';
+  ov.style.height = defaultH + 'px';
+  ov.style.left   = ((vp.width  - defaultW) / 2) + 'px';
+  ov.style.top    = ((vp.height - defaultH) / 2) + 'px';
+  updateOverlayLabel();
+  setupPasteOverlayDrag();
+}
+
+function resetPastePosition() {
+  const cv = document.getElementById('pastePageCanvas');
+  const ov = document.getElementById('pasteImageOverlay');
+  const defaultW = Math.min(cv.width * 0.4, 260);
+  const defaultH = defaultW * 0.65;
+  ov.style.width  = defaultW + 'px';
+  ov.style.height = defaultH + 'px';
+  ov.style.left   = ((cv.width  - defaultW) / 2) + 'px';
+  ov.style.top    = ((cv.height - defaultH) / 2) + 'px';
+  updateOverlayLabel();
+}
+
+function updateOverlayLabel() {
+  const ov = document.getElementById('pasteImageOverlay');
+  const cv = document.getElementById('pastePageCanvas');
+  const ovL = parseFloat(ov.style.left);
+  const ovT = parseFloat(ov.style.top);
+  const ovW = parseFloat(ov.style.width);
+  const ovH = parseFloat(ov.style.height);
+  // Convert canvas px to PDF points
+  const pdfW = pdf2Doc.getPages()[targetPageNum-1].getSize().width;
+  const pdfH = pdf2Doc.getPages()[targetPageNum-1].getSize().height;
+  const ptX = Math.round((ovL / cv.width)  * pdfW);
+  const ptY = Math.round(((cv.height - ovT - ovH) / cv.height) * pdfH);
+  const ptW = Math.round((ovW / cv.width)  * pdfW);
+  const ptH = Math.round((ovH / cv.height) * pdfH);
+  document.getElementById('overlayLabel').textContent = `${ptW}×${ptH} pt  @  (${ptX}, ${ptY})`;
+}
+
+function setupPasteOverlayDrag() {
+  const ov = document.getElementById('pasteImageOverlay');
+  const cv = document.getElementById('pastePageCanvas');
+
+  // Remove old listeners by cloning
+  const newOv = ov.cloneNode(true);
+  newOv.querySelector('img').src = clipboardImageDataURL;
+  ov.parentNode.replaceChild(newOv, ov);
+  const overlay = document.getElementById('pasteImageOverlay');
+
+  // Drag to move
+  overlay.addEventListener('mousedown', e => {
+    if (e.target.classList.contains('resize-handle')) return;
+    pasteOverlayDragging = true;
+    pasteDragStartX = e.clientX;
+    pasteDragStartY = e.clientY;
+    pasteOvStartX = parseFloat(overlay.style.left);
+    pasteOvStartY = parseFloat(overlay.style.top);
+    e.preventDefault();
+  });
+
+  // Resize handles
+  overlay.querySelectorAll('.resize-handle').forEach(handle => {
+    handle.addEventListener('mousedown', e => {
+      pasteOverlayResizing = true;
+      pasteResizeDir = handle.dataset.dir;
+      pasteDragStartX = e.clientX;
+      pasteDragStartY = e.clientY;
+      pasteOvStartX = parseFloat(overlay.style.left);
+      pasteOvStartY = parseFloat(overlay.style.top);
+      pasteOvStartW = parseFloat(overlay.style.width);
+      pasteOvStartH = parseFloat(overlay.style.height);
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  });
+
+  document.addEventListener('mousemove', onPasteMouseMove);
+  document.addEventListener('mouseup',   onPasteMouseUp);
+}
+
+function onPasteMouseMove(e) {
+  const overlay = document.getElementById('pasteImageOverlay');
+  const cv = document.getElementById('pastePageCanvas');
+  if (!overlay || !cv) return;
+  const dx = e.clientX - pasteDragStartX;
+  const dy = e.clientY - pasteDragStartY;
+  // Scale dx/dy from screen px to canvas px
+  const rect = cv.getBoundingClientRect();
+  const sx = cv.width  / rect.width;
+  const sy = cv.height / rect.height;
+  const cdx = dx * sx;
+  const cdy = dy * sy;
+
+  if (pasteOverlayDragging) {
+    let newL = pasteOvStartX + cdx;
+    let newT = pasteOvStartY + cdy;
+    const ovW = parseFloat(overlay.style.width);
+    const ovH = parseFloat(overlay.style.height);
+    newL = Math.max(0, Math.min(cv.width  - ovW, newL));
+    newT = Math.max(0, Math.min(cv.height - ovH, newT));
+    overlay.style.left = newL + 'px';
+    overlay.style.top  = newT + 'px';
+    updateOverlayLabel();
+  } else if (pasteOverlayResizing) {
+    let newW = pasteOvStartW;
+    let newH = pasteOvStartH;
+    let newL = pasteOvStartX;
+    let newT = pasteOvStartY;
+    const dir = pasteResizeDir;
+    if (dir.includes('e')) newW = Math.max(40, pasteOvStartW + cdx);
+    if (dir.includes('s')) newH = Math.max(30, pasteOvStartH + cdy);
+    if (dir.includes('w')) { newW = Math.max(40, pasteOvStartW - cdx); newL = pasteOvStartX + (pasteOvStartW - newW); }
+    if (dir.includes('n')) { newH = Math.max(30, pasteOvStartH - cdy); newT = pasteOvStartY + (pasteOvStartH - newH); }
+    overlay.style.width  = newW + 'px';
+    overlay.style.height = newH + 'px';
+    overlay.style.left   = newL + 'px';
+    overlay.style.top    = newT + 'px';
+    updateOverlayLabel();
+  }
+}
+
+function onPasteMouseUp() {
+  pasteOverlayDragging  = false;
+  pasteOverlayResizing  = false;
+}
+
+async function executePaste() {
+  if (!clipboardImageDataURL || !pdf2Doc) return;
+  const overlay = document.getElementById('pasteImageOverlay');
+  const cv      = document.getElementById('pastePageCanvas');
+  const ovL = parseFloat(overlay.style.left);
+  const ovT = parseFloat(overlay.style.top);
+  const ovW = parseFloat(overlay.style.width);
+  const ovH = parseFloat(overlay.style.height);
+
+  const page = pdf2Doc.getPages()[targetPageNum - 1];
+  const { width: pdfW, height: pdfH } = page.getSize();
+
+  // Convert canvas px → PDF points
+  const ptX = (ovL / cv.width)  * pdfW;
+  const ptY = ((cv.height - ovT - ovH) / cv.height) * pdfH; // PDF Y is from bottom
+  const ptW = (ovW / cv.width)  * pdfW;
+  const ptH = (ovH / cv.height) * pdfH;
+
+  toast('⏳ Menempelkan gambar ke PDF...');
+  try {
+    const imgBytes = await fetch(clipboardImageDataURL).then(r => r.arrayBuffer());
+    const pngImage = await pdf2Doc.embedPng(imgBytes);
+    page.drawImage(pngImage, { x: ptX, y: ptY, width: ptW, height: ptH });
+    const outBytes = await pdf2Doc.save();
+    downloadBytes(outBytes, pdf2FileName.replace('.pdf', '_pasted.pdf'));
+    toast('✅ Berhasil! PDF sudah diunduh.', 'success');
+    closeCopyModal();
+  } catch(err) {
+    toast('Error: ' + err.message, 'error');
+  }
+}
+
 // ── Keyboard shortcuts ──────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -1275,9 +1896,47 @@ document.addEventListener('keydown', e => {
   if (e.key === 'z' && (e.ctrlKey || e.metaKey)) undoAnnotation();
   if (e.key === 't') setTool('text');
   if (e.key === 'e') setTool('whiteout');
+  if (e.key === 'c' && !e.ctrlKey && !e.metaKey) setTool('copy');
   if (e.key === 'd') setTool('draw');
   if (e.key === 'h') setTool('highlight');
-  if (e.key === 'Escape') setTool('select');
+  if (e.key === 'Escape') { setTool('select'); closeCopyModal(); }
+});
+</script>
+</body>
+</html>
+  const scaleX = rect.width / canvas.width;
+  const scaleY = rect.height / canvas.height;
+  const wrapper = canvas.parentElement;
+  const wRect = wrapper.getBoundingClientRect();
+
+  const x1 = Math.min(start.x, end.x) * scaleX;
+  const y1 = Math.min(start.y, end.y) * scaleY;
+  const w  = Math.abs(end.x - start.x) * scaleX;
+  const h  = Math.abs(end.y - start.y) * scaleY;
+
+  copySelBox = document.createElement('div');
+  copySelBox.className = 'copy-sel-box';
+  copySelBox.style.cssText = `left:${x1}px;top:${y1}px;width:${w}px;height:${h}px;`;
+  wrapper.appendChild(copySelBox);
+}
+
+
+
+
+// ── Keyboard shortcuts ──────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changePage(-1);
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changePage(1);
+  if (e.key === '=' || e.key === '+') changeZoom(0.25);
+  if (e.key === '-') changeZoom(-0.25);
+  if (e.key === 'z' && (e.ctrlKey || e.metaKey)) undoAnnotation();
+  if (e.key === 't') setTool('text');
+  if (e.key === 'e') setTool('whiteout');
+  if (e.key === 'c' && !e.ctrlKey && !e.metaKey) setTool('copy');
+  if (e.key === 'd') setTool('draw');
+  if (e.key === 'h') setTool('highlight');
+  if (e.key === 'Escape') { setTool('select'); closeCopyModal(); }
 });
 </script>
 </body>
